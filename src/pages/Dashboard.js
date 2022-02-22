@@ -12,11 +12,11 @@ function Dashboard() {
     try {
       console.log(user?.uid);
       console.log(user?.name);
-      const q = query(collection(db, "users"));
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
       const doc = await getDocs(q);
       console.log(doc);
       const data = doc.docs[0].data();
-      console.log(data.uid);
+      console.log(data);
       setName(data.name);
     } catch (err) {
       console.error(err);

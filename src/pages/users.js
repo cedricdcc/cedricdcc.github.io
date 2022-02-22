@@ -10,7 +10,7 @@ function UserPage() {
     const [NewName, setNewName] = useState("");
     const [NewValorantName, setNewValorantName] = useState("");
     const [NewTag, setNewTag] = useState("");
-    const usersCollRef = collection(db, "valo_users")
+    const usersCollRef = collection(db, "users")
     //query users before mounting
 
 

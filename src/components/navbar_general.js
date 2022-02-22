@@ -18,7 +18,10 @@ function NavBar() {
     /* get the current user, if the current user is not populated then redirect to the login page */
     const [user, loading, error] = useAuthState(auth);
     console.log(user);
-    if (user == null && last_part_url != "") navigate("/");
+    if (user == null && last_part_url == "register"){
+        if(last_part_url == "register") console.log("register");
+        if(last_part_url != "" && last_part_url != "register") navigate("/");
+    } 
     if (user != null) {
         return (
             <Navbar bg="light" expand="lg">

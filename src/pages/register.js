@@ -11,15 +11,17 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [NewValorantName, setNewValorantName] = useState("");
+  const [NewTag, setNewTag] = useState("");
   const [user, loading, error] = useAuthState(auth);
   const history = useNavigate();
   const register = () => {
     if (!name) alert("Please enter name");
-    registerWithEmailAndPassword(name, email, password);
+    registerWithEmailAndPassword(name, email, password, NewValorantName, NewTag);
   };
   useEffect(() => {
     if (loading) return;
-    if (user) window.location.href = "/dashboard";
+    if (user) window.location.href = "/home";
   }, [user, loading]);
   return (
     <div className="register">
@@ -30,6 +32,20 @@ function Register() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Full Name"
+        />
+        <input
+          type="text"
+          className="register__textBox"
+          value={NewValorantName}
+          onChange={(e) => setNewValorantName(e.target.value)}
+          placeholder="Valorant Name"
+        />
+        <input
+          type="text"
+          className="register__textBox"
+          value={NewTag}
+          onChange={(e) => setNewTag(e.target.value)}
+          placeholder="Valorant Tag eg: EUW"
         />
         <input
           type="text"
