@@ -10,9 +10,13 @@ function Dashboard() {
   const navigate = useNavigate();
   const fetchUserName = async () => {
     try {
-      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      console.log(user?.uid);
+      console.log(user?.name);
+      const q = query(collection(db, "users"));
       const doc = await getDocs(q);
+      console.log(doc);
       const data = doc.docs[0].data();
+      console.log(data.uid);
       setName(data.name);
     } catch (err) {
       console.error(err);

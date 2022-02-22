@@ -17,10 +17,11 @@ function Login() {
             </div>
         )
     }
-    if (user) navigate("/dashboard");
+    if (user) navigate("/home");
   }, [user, loading]);
   return (
-    <div className="login">
+    <div>
+      <div className="login">
       <div className="login__container">
         <input
           type="text"
@@ -53,6 +54,8 @@ function Login() {
         </div>
       </div>
     </div>
+  </div>
+
   );
 }
 export default Login;
