@@ -5,6 +5,12 @@
     align-items: center;
     justify-content: center;
   }
+
+.backgroundgrey {
+    background-color: #dcdcdc;
+    min-height: 80vh;
+  }
+
 .login__container {
     display: flex;
     flex-direction: column;

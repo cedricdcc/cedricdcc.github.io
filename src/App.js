@@ -8,13 +8,13 @@ import Register from "./pages/register";
 import Reset from "./pages/reset";
 import TaskPage from './pages/tasks';
 import Dashboard from "./pages/Dashboard";
+import Footer from './components/footer';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <Navbar/>
-      <br />
       <div>
         <Routes>
           <Route path='/' element={<Login/>} />
@@ -27,6 +27,7 @@ function App() {
           <Route element={PageNotFound} />
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 }

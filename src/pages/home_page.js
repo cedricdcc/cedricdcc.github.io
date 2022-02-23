@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../utils/firebase-config";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import '../css/home_page.css';
-import {Table} from 'react-bootstrap';
 function HomePage() {
     //define all constants first
     const [user, loading, error] = useAuthState(auth);
@@ -39,7 +38,7 @@ function HomePage() {
                     <img src={logo} className="App-logo" alt="logo" />
                     <p>Welcome back {name}</p>
                     <p>
-                    Coming soon: impulsive valorant matchmaker bruv
+                    Coming soon: impulsive valorant matchmaker
                     </p>
             </div>
         </div>
