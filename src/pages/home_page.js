@@ -30,19 +30,17 @@ function HomePage() {
         fetchUserName();
     }, [user, loading]);
     return (
-        <div class="container">
+        <div class="container backgroundblack">
             <br />
             <div class="twitch-area">
-                <ReactTwitchEmbedVideo channel="impulsiveempathy" height="500px"/>
+                <ReactTwitchEmbedVideo channel="impulsiveempathy" height="100%"/>
             </div>
             <div class="other-area">
-                <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
                     <p>Welcome back {name}</p>
                     <p>
                     Coming soon: impulsive valorant matchmaker bruv
                     </p>
-                </header>
             </div>
         </div>
     )
