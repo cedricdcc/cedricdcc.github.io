@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../utils/firebase-config";
 import { query, collection, getDocs, where } from "firebase/firestore";
+import '../css/home_page.css';
+import {Table} from 'react-bootstrap';
 function HomePage() {
     //define all constants first
     const [user, loading, error] = useAuthState(auth);
@@ -28,23 +30,20 @@ function HomePage() {
         fetchUserName();
     }, [user, loading]);
     return (
-        <div>
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>Welcome back {name}</p>
-                <p>
-                Coming soon: impulsive valorant matchmaker bruv
-                </p>
-                <a
-                className="App-link"
-                href="https://www.twitch.tv/impulsiveempathy"
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                Join me while I'm deer/content-hunting
-                </a>
-                <ReactTwitchEmbedVideo channel="impulsiveempathy" />
-            </header>
+        <div class="container">
+            <br />
+            <div class="twitch-area">
+                <ReactTwitchEmbedVideo channel="impulsiveempathy" height="500px"/>
+            </div>
+            <div class="other-area">
+                <header className="App-header">
+                    <img src={logo} className="App-logo" alt="logo" />
+                    <p>Welcome back {name}</p>
+                    <p>
+                    Coming soon: impulsive valorant matchmaker bruv
+                    </p>
+                </header>
+            </div>
         </div>
     )
     }
