@@ -50,7 +50,10 @@ const registerWithEmailAndPassword = async (name, email, password, NewValorantNa
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
-      const newDoc = await addDoc(collection(db, "users"), {
+      console.log(user.uid);
+      /*alert(user.uid);
+      alert("writing in user database");*/
+      await addDoc(collection(db, "users"), {
         uid: user.uid,
         name: name,
         authProvider: "local",
@@ -58,7 +61,6 @@ const registerWithEmailAndPassword = async (name, email, password, NewValorantNa
         valorant_name:NewValorantName,
         valorant_tag:NewTag
       });
-      console.log("Document written with ID: ", newDoc.id);
     } catch (err) {
       console.error(err);
       alert(err.message);
