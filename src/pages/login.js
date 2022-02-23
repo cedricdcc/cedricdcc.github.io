@@ -24,12 +24,12 @@ function Login() {
   return (
     /* have the same interface design as the home page */
     <div>
-      <SocialBanner/>
       <div class="container backgroundgrey">
             <div class="twitch-area">
                 <ReactTwitchEmbedVideo channel="impulsiveempathy" height="100%"/>
             </div>
             <div class="other-area">
+            <SocialBanner/>
             <div>
               <div className="login">
                 <div className="login__container">
