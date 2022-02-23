@@ -20,6 +20,7 @@ function HomePage() {
           setName(data.name);
         } catch (err) {
           console.error(err);
+          setName("You magnificent creature");
           alert("An error occured while fetching user data");
         }
     };
@@ -28,21 +29,43 @@ function HomePage() {
         if (!user) return navigate("/");
         fetchUserName();
     }, [user, loading]);
-    return (
-        <div class="container backgroundblack">
-            <br />
-            <div class="twitch-area">
-                <ReactTwitchEmbedVideo channel="impulsiveempathy" height="100%"/>
+
+    if(name == "You magnificent creature"){
+        return (
+            <div class="container backgroundblack">
+                <br />
+                <div class="twitch-area">
+                    <ReactTwitchEmbedVideo channel="impulsiveempathy" height="100%"/>
+                </div>
+                <div class="other-area">
+                        <img src={logo} className="App-logo" alt="logo" />
+                        <p>Welcome back {name}</p>
+                        <p>
+                        You can go and fill in your valorant id to participate in awesome valorant with the link below </p>
+                        <a href="/register_user">register valo id</a>
+                        <p>
+                        Coming soon: impulsive valorant matchmaker
+                        </p>
+                </div>
             </div>
-            <div class="other-area">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>Welcome back {name}</p>
-                    <p>
-                    Coming soon: impulsive valorant matchmaker
-                    </p>
+        )
+    }else{
+        return (
+            <div class="container backgroundblack">
+                <br />
+                <div class="twitch-area">
+                    <ReactTwitchEmbedVideo channel="impulsiveempathy" height="100%"/>
+                </div>
+                <div class="other-area">
+                        <img src={logo} className="App-logo" alt="logo" />
+                        <p>Welcome back {name}</p>
+                        <p>
+                        Coming soon: impulsive valorant matchmaker
+                        </p>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
     }
     
     export default HomePage

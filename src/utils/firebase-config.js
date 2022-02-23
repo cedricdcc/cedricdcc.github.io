@@ -46,21 +46,13 @@ const logInWithEmailAndPassword = async (email, password) => {
     }
 };
 
-const registerWithEmailAndPassword = async (name, email, password, NewValorantName, NewTag) => {
+const registerWithEmailAndPassword = async (email, password) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
       console.log(user.uid);
       /*alert(user.uid);
       alert("writing in user database");*/
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: name,
-        authProvider: "local",
-        email: email,
-        valorant_name:NewValorantName,
-        valorant_tag:NewTag
-      });
     } catch (err) {
       console.error(err);
       alert(err.message);
