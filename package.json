@@ -21,8 +21,10 @@
     "react-firebase-hooks": "^5.0.2",
     "react-icons": "^4.3.1",
     "react-loading": "^2.0.3",
+    "react-player": "^2.9.0",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-step-builder": "^3.0.3",
     "react-twitch-embed-video": "^3.0.2",
     "web-vitals": "^2.1.4"
   },

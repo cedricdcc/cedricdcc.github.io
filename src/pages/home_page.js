@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../utils/firebase-config";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import '../css/home_page.css';
-import {getUserValoProfileInfo} from "../utils/tracker-gg-valo-api";
 
 function HomePage() {
     //define all constants first
@@ -17,24 +16,20 @@ function HomePage() {
     const fetchUserName = async () => {
         try {
           const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+          console.log(user?.uid);
           const doc = await getDocs(q);
           const data = doc.docs[0].data();
-          setName(data.name);
+          setName(data.valorant_name);
         } catch (err) {
           console.error(err);
           setName("You magnificent creature");
-          /*alert("An error occured while fetching user data");*/
         }
     };
-
-    /* temp axample space for getting mmr rating of player */
-
 
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/");
         fetchUserName();
-        getUserValoProfileInfo("Cetinator","VLIZ");
     }, [user, loading]);
 
     if(name == "You magnificent creature"){

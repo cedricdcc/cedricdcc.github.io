@@ -13,11 +13,16 @@ function NavBar() {
     const navigate = useNavigate();
     tocheck.push(last_part_url);
     for (var i=0; i < tocheck.length; i++) {
-        console.log(tocheck[i]);
+        //console.log(tocheck[i]);
     } 
+    
+    const pureLogout = async () => {
+        logout();
+        navigate('/');
+    };
+
     /* get the current user, if the current user is not populated then redirect to the login page */
     const [user, loading, error] = useAuthState(auth);
-    console.log(user);
     if (user == null && last_part_url == "register"){
         if(last_part_url == "register") console.log("register");
         if(last_part_url != "" && last_part_url != "register") navigate("/");
@@ -41,7 +46,7 @@ function NavBar() {
                         </NavDropdown>
                     </Nav>
                     </Navbar.Collapse>
-                    <Button  onClick={logout}>Logout</Button>
+                    <Button  onClick={pureLogout}>Logout</Button>
                 </Container>
             </Navbar>
         )

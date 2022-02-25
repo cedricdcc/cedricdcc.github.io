@@ -1,26 +1,30 @@
 import React, {useState, useEffect, useRef} from 'react';
 import ReactLoading from 'react-loading';
-import {db} from '../utils/firebase-config';
+import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo} from '../utils/firebase-config';
 import {Table, Button} from 'react-bootstrap';
 import {collection, getDocs, addDoc} from 'firebase/firestore';
-
+import {getUserInfo} from "../utils/tracker-gg-valo-api";
+import { useAuthState } from "react-firebase-hooks/auth";
 function UserPage() {
     const [Loading, setLoading] = useState(false) 
     const [users, setUsers] = useState([]);
-    const [NewName, setNewName] = useState("");
-    const [NewValorantName, setNewValorantName] = useState("");
-    const [NewTag, setNewTag] = useState("");
-    const usersCollRef = collection(db, "users")
+    const usersCollRef = collection(db, "users");
+    const [user, loading, error] = useAuthState(auth);
+    const [ValoName, setValoName] = useState(); 
+    const [ValoTag, setValoTag] = useState(); 
+    const [userdocid, setUserDocId] = useState(''); 
+    const [toupdatedict, setUpdateDict] = useState();
+    /*
+    const useruid = user?.uid;
+    valoprofilename(useruid);
+    getdocid(useruid);
+    toupdatedictf(ValoName,ValoTag);
+    console.log(toupdatedict);
+    updateprofiledatabase(userdocid,toupdatedict);
+    */
+
     //query users before mounting
-
-
-    const createUser = async () => {
-        await addDoc(usersCollRef, {name: NewName, valorant_name:NewValorantName, valorant_tag:NewTag})
-        window.location.reload();
-    }
-
-    useEffect(() => {
-        const getUsers = async () => {
+    const getUsers = async () => {
         setLoading(true);
         const userdata = await getDocs(usersCollRef);
         console.log(userdata)
@@ -28,29 +32,67 @@ function UserPage() {
         setLoading(false);
     }
 
-    getUsers()
+    const valoprofilename = async (useruid) => {
+        getValUserInfo(useruid).then((response) => {
+            console.log(response.valorant_name);
+            setValoName(response.valorant_name);
+            setValoTag(response.valorant_tag);
+        });
+    }
 
-    }, [])
+    const toupdatedictf = async (profilename,profiletag) => {
+        getUserInfo(profilename,profiletag).then((r) => {
+            console.log(r);
+            setUpdateDict(r);
+        });
+    }
+
+    const getdocid = async (tosearchuser) => {
+        getValUserDocUid(tosearchuser).then((r) => {
+            console.log(r)
+            setUserDocId(r);
+        });
+    }
+
+    const updateprofiledatabase = async (docid,toupdatedict) => {
+        updateValUserInfo(docid,toupdatedict).then(() => {
+            console.log("trying to update");
+        });
+    }
+    
+    useEffect(() => {
+        getUsers();
+        valoprofilename(user?.uid);
+        getdocid(user?.uid)
+    }, [user, loading])
+
+    useEffect(() => {
+        console.log(ValoName);
+        console.log(ValoTag);
+        toupdatedictf(ValoName,ValoTag);
+    }, [ValoName, ValoTag])
+
+    useEffect(() => {
+        console.log("last executed");
+        updateprofiledatabase(userdocid,toupdatedict);
+    }, [toupdatedict, userdocid])
+
+    
 
     if(Loading){
         return(
-        <div class="busy">
+        <div className="busy">
             <ReactLoading type='bars' color='grey' height={'20vw'} width={'20vw'} />
         </div>
         )
         }else{
         return (
-            <div class="container">
-                <input type="text" placeholder="...name" onChange={(event) => {setNewName(event.target.value)}}/>
-                <input type="text" placeholder="...valorant name" onChange={(event) => {setNewValorantName(event.target.value)}}/>
-                <input type="text" placeholder="...valorant tag eg :EUW" onChange={(event) => {setNewTag(event.target.value)}}/>
-                <button onClick={createUser}> Create User </button>
+            <div>
                 <hr />
                 <Table striped bordered hover>
                     <thead>
                         <tr>
                             <th>Actions</th>
-                            <th>Name</th>
                             <th>Valorant id</th>
                         </tr>
                     </thead>
@@ -58,7 +100,6 @@ function UserPage() {
                     {users.map((user) => {
                         return  <tr>
                                     <td><Button>Test doesn't do anything</Button></td>
-                                    <td>{user.name}</td>
                                     <td>{user.valorant_name}#{user.valorant_tag}</td>
                                 </tr>
                         })}

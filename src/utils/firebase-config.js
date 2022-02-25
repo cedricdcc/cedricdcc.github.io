@@ -4,7 +4,8 @@ import {getFirestore} from "@firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import {GoogleAuthProvider,getAuth,signInWithPopup,signInWithEmailAndPassword,
     createUserWithEmailAndPassword,sendPasswordResetEmail,signOut} from "firebase/auth";
-import {query,getDocs,collection,where,addDoc} from "firebase/firestore";
+import {query,getDocs,collection,where,addDoc,updateDoc,doc} from "firebase/firestore";
+
 const firebaseConfig = {
     apiKey: "AIzaSyAgU28v6rjbJVG_M6hYeV87_xIYc4Tq6BA",
     authDomain: "impulsiveempathyvalorant.firebaseapp.com",
@@ -59,6 +60,67 @@ const registerWithEmailAndPassword = async (email, password) => {
     }
 };
 
+
+
+const getValUserDocUid = async (tosearchuser) => {
+  try {
+    const q = query(collection(db, "users"), where("uid", "==", tosearchuser));
+    const doc = await getDocs(q);
+    return doc.docs[0].id
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateValUserInfo = async (docid,toupdatedict) => {
+  try {
+    var docreference = doc(db,"users",docid)
+    console.log(docid);
+    console.log(toupdatedict);
+    updateDoc(docreference,toupdatedict);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getValUserInfo = async (tosearchuser) => {
+  try {
+    const q = query(collection(db, "users"), where("uid", "==", tosearchuser));
+    const doc = await getDocs(q);
+    const data = doc.docs[0].data();
+    return data
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const valUserExists = async (tosearchuser) => {
+  try {
+    const q = query(collection(db, "users"), where("uid", "==", tosearchuser));
+    const doc = await getDocs(q);
+    const data = doc.docs[0].data();
+    console.log(data);
+    return true
+  } catch (err) {
+    console.error(err);
+    return false
+  }
+};
+
+const createValorantUser = async (NewValorantName,NewTag,mailuid) => {
+  try {
+    await addDoc(collection(db, "users"), 
+    { valorant_name:NewValorantName,
+      valorant_tag:NewTag,
+      uid:mailuid}
+      )
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
 const sendPasswordReset = async (email) => {
     try {
       console.log("about to send email");
@@ -89,4 +151,9 @@ export {
     sendPasswordReset,
     sendPasswordResetEmail,
     logout,
+    createValorantUser,
+    valUserExists,
+    getValUserDocUid,
+    getValUserInfo,
+    updateValUserInfo
   };
