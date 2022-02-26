@@ -81,10 +81,6 @@ const getUserInfo = async (valorant_name, valorant_tag) => {
                 const crntiericon = response.data.data.segments[0].stats.rank.metadata.iconUrl;
                 const maxtier = response.data.data.segments[0].stats.peakRank.metadata.tierName;
                 const maxtiericon = response.data.data.segments[0].stats.peakRank.metadata.iconUrl;
-                //console.log(response.data.data.segments[0].stats.rank.metadata.tierName) // Name of the current rank user
-                //console.log(response.data.data.segments[0].stats.rank.metadata.iconUrl) // image of the current rank user
-                //console.log(response.data.data.segments[0].stats.peakRank.metadata.tierName) // Name of the highest rank user
-                //console.log(response.data.data.segments[0].stats.peakRank.metadata.iconUrl) // image of the highest rank user
                 const time_played =  getTotalTimePlayed(response.data.data).then(resulto => {
                     return {
                         "current_tier":crntier,

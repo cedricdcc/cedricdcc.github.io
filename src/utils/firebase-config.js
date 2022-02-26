@@ -60,8 +60,6 @@ const registerWithEmailAndPassword = async (email, password) => {
     }
 };
 
-
-
 const getValUserDocUid = async (tosearchuser) => {
   try {
     const q = query(collection(db, "users"), where("uid", "==", tosearchuser));

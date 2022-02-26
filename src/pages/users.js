@@ -5,6 +5,7 @@ import {Table, Button} from 'react-bootstrap';
 import {collection, getDocs, addDoc} from 'firebase/firestore';
 import {getUserInfo} from "../utils/tracker-gg-valo-api";
 import { useAuthState } from "react-firebase-hooks/auth";
+import '../css/users.css';
 function UserPage() {
     const [Loading, setLoading] = useState(false) 
     const [users, setUsers] = useState([]);
@@ -77,8 +78,6 @@ function UserPage() {
         updateprofiledatabase(userdocid,toupdatedict);
     }, [toupdatedict, userdocid])
 
-    
-
     if(Loading){
         return(
         <div className="busy">
@@ -89,18 +88,24 @@ function UserPage() {
         return (
             <div>
                 <hr />
-                <Table striped bordered hover>
+                <Table striped bordered hover  size="sm">
                     <thead>
                         <tr>
-                            <th>Actions</th>
+                            <th>Moderator Actions</th>
                             <th>Valorant id</th>
+                            <th className="rankbadge">current rank</th>
+                            <th className="rankbadge">max rank </th>
+                            <th>time played</th>
                         </tr>
                     </thead>
                     <tbody>
                     {users.map((user) => {
                         return  <tr>
-                                    <td><Button>Test doesn't do anything</Button></td>
+                                    <td><Button>actions in the future</Button></td>
                                     <td>{user.valorant_name}#{user.valorant_tag}</td>
+                                    <td><img className="rankbadge" src={user.current_tier_icon} /></td>
+                                    <td><img className="rankbadge" src={user.max_tier_icon} /></td>
+                                    <td>{user.time_played.hours_played}h {user.time_played.minutes_played}m</td>
                                 </tr>
                         })}
                     </tbody>
