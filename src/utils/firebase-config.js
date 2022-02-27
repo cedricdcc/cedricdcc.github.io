@@ -81,6 +81,18 @@ const updateValUserInfo = async (docid,toupdatedict) => {
   }
 };
 
+const getValUserCredentials = async (tosearchuser) => {
+  try {
+    const q = query(collection(db, "users"), where("uid", "==", tosearchuser));
+    const doc = await getDocs(q);
+    const data = doc.docs[0].data().type_user;
+    return data
+  } catch (error) {
+    console.error(error);
+    return "error";
+  }
+};
+
 const getValUserInfo = async (tosearchuser) => {
   try {
     const q = query(collection(db, "users"), where("uid", "==", tosearchuser));
@@ -108,7 +120,8 @@ const valUserExists = async (tosearchuser) => {
 const createValorantUser = async (NewValorantName,NewTag,mailuid) => {
   try {
     await addDoc(collection(db, "users"), 
-    { valorant_name:NewValorantName,
+    { type_user:"user",
+      valorant_name:NewValorantName,
       valorant_tag:NewTag,
       uid:mailuid}
       )
@@ -153,5 +166,6 @@ export {
     valUserExists,
     getValUserDocUid,
     getValUserInfo,
-    updateValUserInfo
+    updateValUserInfo,
+    getValUserCredentials
   };

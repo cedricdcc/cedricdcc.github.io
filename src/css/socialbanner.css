@@ -18,3 +18,9 @@
     transform: scale(1.3);
     transition: 0.7s;
 }
+
+.busy
+{
+    position: absolute;
+    left: 40%;
+}

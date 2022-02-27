@@ -1,87 +1,58 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactLoading from 'react-loading';
-import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo} from '../utils/firebase-config';
+import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo, getValUserCredentials} from '../utils/firebase-config';
 import {Table, Button} from 'react-bootstrap';
-import {collection, getDocs, addDoc} from 'firebase/firestore';
-import {getUserInfo} from "../utils/tracker-gg-valo-api";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import {query,getDocs,collection,where} from "firebase/firestore";
 import '../css/users.css';
 function UserPage() {
     const [Loading, setLoading] = useState(false) 
     const [users, setUsers] = useState([]);
-    const usersCollRef = collection(db, "users");
     const [user, loading, error] = useAuthState(auth);
-    const [ValoName, setValoName] = useState(); 
-    const [ValoTag, setValoTag] = useState(); 
-    const [userdocid, setUserDocId] = useState(''); 
-    const [toupdatedict, setUpdateDict] = useState();
-    /*
-    const useruid = user?.uid;
-    valoprofilename(useruid);
-    getdocid(useruid);
-    toupdatedictf(ValoName,ValoTag);
-    console.log(toupdatedict);
-    updateprofiledatabase(userdocid,toupdatedict);
-    */
+    const navigate = useNavigate();
+    const [usercred, setUserCred] = useState("td");
 
+    getValUserCredentials(user?.uid).then((rs) => {
+        setUserCred(rs);
+    });
+
+    const checkusercreds = async() => {
+        if (usercred == "moderator") {
+          console.log("welcome mod");
+        }if(usercred == "user") {
+            navigate("/");
+        }if(usercred == "error") {
+            setLoading(true);
+        }else{
+            console.log("TBD");
+            
+        }
+    }
     //query users before mounting
     const getUsers = async () => {
         setLoading(true);
-        const userdata = await getDocs(usersCollRef);
-        console.log(userdata)
-        setUsers(userdata.docs.map((doc) => ({...doc.data(), id: doc.id})));
-        setLoading(false);
-    }
-
-    const valoprofilename = async (useruid) => {
-        getValUserInfo(useruid).then((response) => {
-            console.log(response.valorant_name);
-            setValoName(response.valorant_name);
-            setValoTag(response.valorant_tag);
-        });
-    }
-
-    const toupdatedictf = async (profilename,profiletag) => {
-        getUserInfo(profilename,profiletag).then((r) => {
-            console.log(r);
-            setUpdateDict(r);
-        });
-    }
-
-    const getdocid = async (tosearchuser) => {
-        getValUserDocUid(tosearchuser).then((r) => {
-            console.log(r)
-            setUserDocId(r);
-        });
-    }
-
-    const updateprofiledatabase = async (docid,toupdatedict) => {
-        updateValUserInfo(docid,toupdatedict).then(() => {
-            console.log("trying to update");
-        });
+        const q = query(collection(db, "users"), where("current_tier", "!=", null));
+        getDocs(q).then((finaluserdata) => {
+            try {
+                setUsers(finaluserdata.docs.map((doc) => ({...doc.data(), id: doc.id})));
+            } catch (error) {
+                alert("something went wrong here")
+            }
+            setLoading(false);
+        })
     }
     
     useEffect(() => {
+        checkusercreds();
         getUsers();
-        valoprofilename(user?.uid);
-        getdocid(user?.uid)
-    }, [user, loading])
-
-    useEffect(() => {
-        console.log(ValoName);
-        console.log(ValoTag);
-        toupdatedictf(ValoName,ValoTag);
-    }, [ValoName, ValoTag])
-
-    useEffect(() => {
-        console.log("last executed");
-        updateprofiledatabase(userdocid,toupdatedict);
-    }, [toupdatedict, userdocid])
+    }, [user, loading, usercred])
 
     if(Loading){
         return(
         <div className="busy">
-            <ReactLoading type='bars' color='grey' height={'20vw'} width={'20vw'} />
+            <h4>Getting users data</h4>
+            <ReactLoading className="loadingbar" type='bars' color='grey' height={'20vw'} width={'20vw'} />
         </div>
         )
         }else{

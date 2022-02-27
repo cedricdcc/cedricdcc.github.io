@@ -56,6 +56,11 @@ function TaskPage() {
                     <td>mod role for site user management</td>
                     <td>+</td>
                     </tr>
+                    <tr>
+                    <td>9</td>
+                    <td>heroku deploy script or other github pages script for better site name</td>
+                    <td>+</td>
+                    </tr>
                 </tbody>
             </Table>
         </div>

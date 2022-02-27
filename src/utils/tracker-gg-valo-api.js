@@ -81,13 +81,18 @@ const getUserInfo = async (valorant_name, valorant_tag) => {
                 const crntiericon = response.data.data.segments[0].stats.rank.metadata.iconUrl;
                 const maxtier = response.data.data.segments[0].stats.peakRank.metadata.tierName;
                 const maxtiericon = response.data.data.segments[0].stats.peakRank.metadata.iconUrl;
+                const tiervaluestrsplit = response.data.data.segments[0].stats.rank.metadata.iconUrl.split('tiers/');
+                const value_tier_pre = tiervaluestrsplit[1].split(".");
+                const value_tier_final = value_tier_pre[0];
                 const time_played =  getTotalTimePlayed(response.data.data).then(resulto => {
                     return {
                         "current_tier":crntier,
                         "current_tier_icon":crntiericon,
                         "max_tier":maxtier,
                         "max_tier_icon":maxtiericon,
-                        "time_played":resulto
+                        "time_played":resulto,
+                        "tier_value" : parseInt(value_tier_final),
+                        "last_updated":Date.now()
                     }
                 })
                 return time_played
