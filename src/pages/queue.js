@@ -3,8 +3,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo, getValUserCredentials} from '../utils/firebase-config';
 import {getUserInfo} from "../utils/tracker-gg-valo-api";
 import ReactLoading from 'react-loading';
-import {collection, getDocs} from 'firebase/firestore';
+import {collection, getDocs, onSnapshot} from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
+import CurrentMatch from '../components/current_match';
+import {Table} from 'react-bootstrap';
+import '../css/queue.css';
 function QueuePage() {
     //constants
     const [user, loading, error] = useAuthState(auth);
@@ -12,11 +15,30 @@ function QueuePage() {
     const usersCollRef = collection(db, "users");
     const [users, setUsers] = useState([]);
     const [Loading, setLoading] = useState(false) 
+    const [currentqueue, setCurrentQueue] = useState([]);
     const navigate = useNavigate();
 
     getValUserCredentials(user?.uid).then((rs) => {
         setUserCred(rs);
     });
+
+    //this function is meant to be in the moderator_queue.js
+    const teambalancer = async () => {
+        console.log("get balanced teams");
+        //first have a big enough dataset to test on, right now there are not enough users to test this
+    }
+
+    useEffect(() => {
+        console.log("getting data queue");
+
+        onSnapshot(collection(db,"queue"), (snapshot) =>{
+            const all_docs = snapshot.docs.map(doc => doc.data());
+            console.log(all_docs);
+            setCurrentQueue(all_docs);
+        });
+
+    }, []); 
+
 
     const getUsers = async () => {
         setLoading(true);
@@ -67,8 +89,26 @@ function QueuePage() {
     }, [user, loading])
     
     return (
-        <div class="containter" width="90%">
-            <h1>Future queue page here</h1>
+        <div width="90%">
+            <h1>queue page</h1>
+            <hr/>
+            <CurrentMatch/>
+            <div className="queuetable">
+                <Table striped bordered>
+                    <thead>
+                        <tr>
+                        <th>queue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {currentqueue.map((user) => {
+                        return  <tr>
+                                    <td>{user.name}</td>
+                                </tr>
+                        })}
+                    </tbody>
+                </Table>
+            </div>
         </div>
     )
 }

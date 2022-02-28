@@ -1,0 +1,21 @@
+.container_curm {
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
+    grid-template-rows: 1fr 1fr 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      ". . colblue colblue colblue colred colred colred . ."
+      ". . colblue colblue colblue colred colred colred . ."
+      ". . queue queue queue queue queue queue . ."; 
+}
+.colblue { grid-area: colblue; }
+.colred { grid-area: colred; }
+.queue { grid-area: queue; }
+
+.blueteam {
+    background-color:rgba(0, 0, 255, 0.3);
+}
+.redteam {
+    background-color:rgba(255, 0, 0, 0.3);
+}
+  
