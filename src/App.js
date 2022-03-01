@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Footer from './components/footer';
 import ValAccountRegistration from './pages/register_valorant_account';
 import QueuePage from './pages/queue';
+import ModQueuePage from './pages/moderator_queue';
 import './App.css';
 import { StepsProvider } from "react-step-builder";
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard/>} />
           <Route path='/tasks' element={<TaskPage/>} />
           <Route path='/queue' element={<QueuePage/>} />
+          <Route path='/moderator_queue' element={<ModQueuePage/>} />
           <Route path='*' element={<PageNFound/>} />
         </Routes>
       </StepsProvider>

@@ -1,30 +1,39 @@
 import React, {useState, useEffect} from 'react';
 import { useAuthState } from "react-firebase-hooks/auth";
-import {auth ,db, getValUserDocUid, getValUserInfo,
-     updateValUserInfo, getValUserCredentials, isUserInQueue,
-     deletefromqueue, addtoqueue} from '../utils/firebase-config';
+import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo, getValUserCredentials} from '../utils/firebase-config';
 import {getUserInfo} from "../utils/tracker-gg-valo-api";
 import ReactLoading from 'react-loading';
-import {collection, getDocs, onSnapshot, query, orderBy} from 'firebase/firestore';
+import {collection, getDocs, onSnapshot} from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
 import CurrentMatch from '../components/current_match';
 import {Table, Button} from 'react-bootstrap';
 import '../css/queue.css';
-function QueuePage() {
+function ModQueuePage() {
     //constants
     const [user, loading, error] = useAuthState(auth);
     const [usercred, setUserCred] = useState("td");
     const usersCollRef = collection(db, "users");
-    const [username, setUserName] = useState();
     const [users, setUsers] = useState([]);
     const [Loading, setLoading] = useState(false) 
-    const [userQueueStatus, setUserQueueStatus] = useState();
     const [currentqueue, setCurrentQueue] = useState([]);
     const navigate = useNavigate();
 
     getValUserCredentials(user?.uid).then((rs) => {
         setUserCred(rs);
     });
+
+    const checkusercreds = async() => {
+        if (usercred == "moderator") {
+          console.log("welcome mod");
+        }if(usercred == "user") {
+            navigate("/queue");
+        }if(usercred == "error") {
+            setLoading(true);
+        }else{
+            console.log("TBD");
+            
+        }
+    }
 
     //this function is meant to be in the moderator_queue.js
     const teambalancer = async () => {
@@ -34,8 +43,8 @@ function QueuePage() {
 
     useEffect(() => {
         console.log("getting data queue");
-        const q = query(collection(db,"queue"), orderBy("time", "asc"));
-        onSnapshot(q, (snapshot) =>{
+
+        onSnapshot(collection(db,"queue"), (snapshot) =>{
             const all_docs = snapshot.docs.map(doc => doc.data());
             console.log(all_docs);
             setCurrentQueue(all_docs);
@@ -49,7 +58,6 @@ function QueuePage() {
         getValUserInfo(user?.uid).then((response) => {
             //add try except here to see if the user is already registered
             console.log(response.valorant_name);
-            setUserName(response.valorant_name);
             //setValoName(response.valorant_name);
             //setValoTag(response.valorant_tag);
             const valoname = response.valorant_name;
@@ -77,70 +85,38 @@ function QueuePage() {
         });
     }
 
-    const checkusercreds = async() => {
-        if (usercred == "moderator") {
-          console.log("welcome mod");
-        }if(usercred == "user") {
-            navigate("/");
-        }else{
-            console.log("TBD");
-        }
-    }
-
-    const addtoqueuefunc = async(user) => {
-        addtoqueue(user).then((resp) =>{
-            setUserQueueStatus(resp)
-        });
-    }
-
-    const deletefromqueuefunc = async(user) => {
-        deletefromqueue(user).then((resp) =>{
-            setUserQueueStatus(resp)
-        });
-    }
-
-    function QueueButton(props) {
-        const inqueue = props.queuestatus;
-        const user = username;
-        if(inqueue){
-            return <Button variant="danger" onClick={() => deletefromqueuefunc(user)}>leave queue</Button>
-        }else{
-            return <Button variant="success" onClick={() => addtoqueuefunc(user)}>queue</Button>
-        }
-    }
-
-    //make function that will check if the user is in the queue, if yes then the button will be remove from queue, if not then add to queue
-    useEffect(() =>{
-        isUserInQueue(username).then((rs) => {
-            setUserQueueStatus(rs);
-        });
-    }, [username])
-
-    console.log(userQueueStatus);
+    //TODO add functionality to the play self button to add current user to the current match and delete 10th user from it and add him back to the queue
+    //TODO add next group functionality
 
     useEffect(() => {
         checkusercreds();
         getUsers();
-    }, [user, loading])
+    }, [user, loading, usercred])
     
     return (
         <div width="90%">
-            <h1>queue page</h1>
+            <h1>moderator queue page</h1>
             <hr/>
             <CurrentMatch/>
-            <QueueButton queuestatus={userQueueStatus}/>
+            <Button variant="primary">play yourself</Button>
+            <Button variant="primary">next group</Button>
             <hr />
             <div className="queuetable">
                 <Table striped bordered>
                     <thead>
                         <tr>
                         <th>queue</th>
+                        <th>actions</th>
                         </tr>
                     </thead>
                     <tbody>
                     {currentqueue.map((user) => {
                         return  <tr>
-                                    <td>{user.name}</td>
+                                    <td>{user.name} </td>
+                                    <td>
+                                        <Button variant="danger">delete from queue</Button>
+                                        <Button variant="success">move to first</Button>
+                                    </td>
                                 </tr>
                         })}
                     </tbody>
@@ -150,4 +126,4 @@ function QueuePage() {
     )
 }
     
-export default QueuePage
+export default ModQueuePage

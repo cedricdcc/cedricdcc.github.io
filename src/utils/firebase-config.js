@@ -4,7 +4,7 @@ import {getFirestore} from "@firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import {GoogleAuthProvider,getAuth,signInWithPopup,signInWithEmailAndPassword,
     createUserWithEmailAndPassword,sendPasswordResetEmail,signOut} from "firebase/auth";
-import {query,getDocs,collection,where,addDoc,updateDoc,doc} from "firebase/firestore";
+import {query,getDocs,collection,where,addDoc,updateDoc,doc,deleteDoc} from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAgU28v6rjbJVG_M6hYeV87_xIYc4Tq6BA",
@@ -37,6 +37,48 @@ const signInWithGoogle = async () => {
         alert(err.message);
     }
 };
+
+const addtoqueue = async (user) => {
+  try {
+    await addDoc(collection(db, "queue"), 
+    { 
+      name:user,
+      time:Date.now()
+    }
+      )
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+const deletefromqueue = async (user) => {
+  try {
+    //get docref queue with name == user
+    const q = query(collection(db, "queue"), where("name", "==", user));
+    const doco = await getDocs(q);
+    const id_to_delete = doco.docs[0].id;
+    const docref_delete = doc(db,"queue",id_to_delete)
+    await deleteDoc(docref_delete)
+    return false
+  } catch (error) {
+    console.log(error)
+    return true
+  }
+}
+
+const isUserInQueue = async (user) => {
+  const q = query(collection(db, "queue"), where("name", "==", user));
+  const doc = await getDocs(q);
+  console.log(doc.docs.length);
+  if (doc.docs.length == 0){
+    return false
+  }
+  else{
+    return true
+  }
+}
 
 const logInWithEmailAndPassword = async (email, password) => {
     try {
@@ -167,5 +209,8 @@ export {
     getValUserDocUid,
     getValUserInfo,
     updateValUserInfo,
-    getValUserCredentials
+    getValUserCredentials,
+    isUserInQueue,
+    addtoqueue,
+    deletefromqueue
   };
