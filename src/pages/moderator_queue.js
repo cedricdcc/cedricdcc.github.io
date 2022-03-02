@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useAuthState } from "react-firebase-hooks/auth";
-import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo, getValUserCredentials} from '../utils/firebase-config';
+import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo, getValUserCredentials, bumptofirst, deletefromqueue,modplayself} from '../utils/firebase-config';
 import {getUserInfo} from "../utils/tracker-gg-valo-api";
 import ReactLoading from 'react-loading';
-import {collection, getDocs, onSnapshot} from 'firebase/firestore';
+import {collection, getDocs, onSnapshot, query, orderBy} from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
-import CurrentMatch from '../components/current_match';
+import CurrentMatchMod from '../components/current_match_mod';
 import {Table, Button} from 'react-bootstrap';
 import '../css/queue.css';
 function ModQueuePage() {
@@ -44,7 +44,8 @@ function ModQueuePage() {
     useEffect(() => {
         console.log("getting data queue");
 
-        onSnapshot(collection(db,"queue"), (snapshot) =>{
+        const q = query(collection(db,"queue"), orderBy("time", "asc"));
+        onSnapshot(q, (snapshot) =>{
             const all_docs = snapshot.docs.map(doc => doc.data());
             console.log(all_docs);
             setCurrentQueue(all_docs);
@@ -97,8 +98,8 @@ function ModQueuePage() {
         <div width="90%">
             <h1>moderator queue page</h1>
             <hr/>
-            <CurrentMatch/>
-            <Button variant="primary">play yourself</Button>
+            <CurrentMatchMod/>
+            <Button variant="primary" onClick={() => modplayself(user?.uid)}>play yourself</Button>
             <Button variant="primary">next group</Button>
             <hr />
             <div className="queuetable">
@@ -114,8 +115,8 @@ function ModQueuePage() {
                         return  <tr>
                                     <td>{user.name} </td>
                                     <td>
-                                        <Button variant="danger">delete from queue</Button>
-                                        <Button variant="success">move to first</Button>
+                                        <Button variant="danger"  onClick={() => deletefromqueue(user.name)}>delete from queue</Button>
+                                        <Button variant="success" onClick={() => bumptofirst(user.name)}>move to first</Button>
                                     </td>
                                 </tr>
                         })}

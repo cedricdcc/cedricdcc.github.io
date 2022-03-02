@@ -4,7 +4,7 @@ import {getFirestore} from "@firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import {GoogleAuthProvider,getAuth,signInWithPopup,signInWithEmailAndPassword,
     createUserWithEmailAndPassword,sendPasswordResetEmail,signOut} from "firebase/auth";
-import {query,getDocs,collection,where,addDoc,updateDoc,doc,deleteDoc} from "firebase/firestore";
+import {query,getDocs,collection,where,addDoc,updateDoc,doc,deleteDoc,orderBy} from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAgU28v6rjbJVG_M6hYeV87_xIYc4Tq6BA",
@@ -67,6 +67,103 @@ const deletefromqueue = async (user) => {
     return true
   }
 }
+
+const bumptofirst = async (user) => {
+  /* 
+  1: get docid of the user to update
+  2: get docid of the first in queue
+  3: get time of person in first queue
+  4: change time to be less then the person first in queue
+   */
+  console.log(user);
+  const q = query(collection(db, "queue"), where("name", "==", user));
+  const doco = await getDocs(q);
+  const id_to_change = doco.docs[0].id;
+  const docref_change = doc(db,"queue",id_to_change)
+
+  const qt = query(collection(db,"queue"), orderBy("time", "asc"));
+  const docot = await getDocs(qt);
+  const to_get_time = docot.docs[0].data().time;
+  
+  const toupdatetime = to_get_time - 1;
+  updateDoc(docref_change,{"name":user,"time":toupdatetime});
+
+}
+
+const deletefrommatch = async(user,team) => {
+  const q = query(collection(db, "current_match"));
+  const current_match_doc = await getDocs(q);
+
+  //get next in line queue
+  const qnil = query(collection(db,"queue"), orderBy("time", "asc"));
+  const current_queue = await getDocs(qnil);
+  const replacement_user = current_queue.docs[0].data().name;
+  const current_match = current_match_doc.docs[0].data();
+  console.log(current_match_doc.docs[0].id);
+  const docref_change = doc(db,"current_match",current_match_doc.docs[0].id)
+
+  if(team == "blue"){
+    const usersteam = current_match_doc.docs[0].data().team_blue
+    const index = usersteam.indexOf(user);
+    if (index > -1) {
+      usersteam.splice(index, 1); 
+    }
+    usersteam.push(replacement_user)
+    console.log(usersteam);
+    // update current_match
+    current_match.team_blue = usersteam;
+    // update record of current_match
+    updateDoc(docref_change,current_match);
+  }else{
+    const usersteam = current_match_doc.docs[0].data().team_red
+    const index = usersteam.indexOf(user);
+    if (index > -1) {
+      usersteam.splice(index, 1);
+    }
+    usersteam.push(replacement_user)
+    // update current_match
+    current_match.team_red = usersteam;
+    updateDoc(docref_change,current_match);
+  }
+  
+  //lastly delete replacement user from queue
+  await deletefromqueue(replacement_user);
+
+}
+
+const replacefrommatch = async(user,team) => {
+  await deletefrommatch(user,team);
+  await addtoqueue(user);
+  await bumptofirst(user);
+}
+
+const modplayself = async(user) => {
+  const qu = query(collection(db, "users"), where("uid", "==", user));
+  const docus = await getDocs(qu);
+  const data = docus.docs[0].data();
+  const replacement_user = data.valorant_name;
+  const q = query(collection(db, "current_match"));
+  const current_match_doc = await getDocs(q);
+  const current_match = current_match_doc.docs[0].data();
+  const docref_change = doc(db,"current_match",current_match_doc.docs[0].id)
+  const usersteam = current_match_doc.docs[0].data().team_blue
+  const toreplaceuser = current_match_doc.docs[0].data().team_blue[0]
+  const index = usersteam.indexOf(toreplaceuser);
+  if (index > -1) {
+    usersteam.splice(index, 1); 
+  }
+  usersteam.push(replacement_user)
+  console.log(usersteam);
+  // update current_match
+  current_match.team_blue = usersteam;
+  // update record of current_match
+  updateDoc(docref_change,current_match);
+  await addtoqueue(toreplaceuser);
+  await bumptofirst(toreplaceuser);
+}
+
+
+
 
 const isUserInQueue = async (user) => {
   const q = query(collection(db, "queue"), where("name", "==", user));
@@ -212,5 +309,9 @@ export {
     getValUserCredentials,
     isUserInQueue,
     addtoqueue,
-    deletefromqueue
+    deletefromqueue,
+    bumptofirst,
+    deletefrommatch,
+    replacefrommatch,
+    modplayself
   };
