@@ -6,7 +6,9 @@ import ReactLoading from 'react-loading';
 import {collection, getDocs, onSnapshot, query, orderBy} from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
 import CurrentMatchMod from '../components/current_match_mod';
-import {Table, Button} from 'react-bootstrap';
+import {Table, Button, Popover, OverlayTrigger} from 'react-bootstrap';
+import {BsFillArrowUpSquareFill} from 'react-icons/bs';
+import {FaTrashAlt} from 'react-icons/fa';
 import '../css/queue.css';
 function ModQueuePage() {
     //constants
@@ -21,6 +23,23 @@ function ModQueuePage() {
     getValUserCredentials(user?.uid).then((rs) => {
         setUserCred(rs);
     });
+
+    const popoverdelete = (
+        <Popover id="popover-delete">
+            <Popover.Header as="h3">Delete</Popover.Header>
+            <Popover.Body>
+                Click this to delete player from the queue.
+            </Popover.Body>
+        </Popover>
+    );
+    const popoverbump = (
+        <Popover id="popover-replace">
+            <Popover.Header as="h3">bump to first place</Popover.Header>
+            <Popover.Body>
+            Click this to bump player to the first place of the queue.
+            </Popover.Body>
+        </Popover>
+    );
 
     const checkusercreds = async() => {
         if (usercred == "moderator") {
@@ -113,11 +132,15 @@ function ModQueuePage() {
                     <tbody>
                     {currentqueue.map((user) => {
                         return  <tr>
-                                    <td>{user.name} </td>
-                                    <td>
-                                        <Button variant="danger"  onClick={() => deletefromqueue(user.name)}>delete from queue</Button>
-                                        <Button variant="success" onClick={() => bumptofirst(user.name)}>move to first</Button>
+                                    <td width="150px">
+                                        <OverlayTrigger trigger="hover" placement="right" overlay={popoverdelete}>
+                                            <Button variant="danger"  onClick={() => deletefromqueue(user.name)}><FaTrashAlt/></Button>
+                                        </OverlayTrigger>
+                                        <OverlayTrigger trigger="hover" placement="right" overlay={popoverbump}>
+                                            <Button variant="success" onClick={() => bumptofirst(user.name)}><BsFillArrowUpSquareFill/></Button>
+                                        </OverlayTrigger>
                                     </td>
+                                    <td>{user.name} </td>
                                 </tr>
                         })}
                     </tbody>

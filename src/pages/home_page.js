@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../utils/firebase-config";
 import { query, collection, getDocs, where } from "firebase/firestore";
+import {Button, OverlayTrigger, Popover} from 'react-bootstrap';
+import {SiRiotgames} from 'react-icons/si';
 import '../css/home_page.css';
 
 function HomePage() {
@@ -26,6 +28,15 @@ function HomePage() {
         }
     };
 
+    const popover = (
+        <Popover id="popover-basic">
+          <Popover.Header as="h3">Queue</Popover.Header>
+          <Popover.Body>
+            Click here to go to the queue page.
+          </Popover.Body>
+        </Popover>
+      );
+
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/");
@@ -45,9 +56,6 @@ function HomePage() {
                         <p>
                         Follow the link below and complete the valorant profile registration to participate in awesome events.</p>
                         <a href="/register_user">register valo id</a>
-                        <p>
-                        Coming soon: impulsive valorant matchmaker
-                        </p>
                 </div>
             </div>
         )
@@ -61,9 +69,9 @@ function HomePage() {
                 <div class="other-area">
                         <img src={logo} className="App-logo" alt="logo" />
                         <p>Welcome back {name}</p>
-                        <p>
-                        Coming soon: impulsive valorant matchmaker
-                        </p>
+                        <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
+                            <Button href="/queue" variant="danger"> <SiRiotgames size="10em"/> </Button>
+                        </OverlayTrigger>
                 </div>
             </div>
         )
