@@ -57,7 +57,7 @@ function NavBar() {
                     <NavDropdown.Item href="/tasks">TODO's</NavDropdown.Item>
                     <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                    <NavDropdown.Item href="https://playoverwatch.com/en-us/beta/#beta-opt-in-button" target="_blank">Overwatch Beta Signup</NavDropdown.Item>
                 </NavDropdown>
             )
         }else{
@@ -66,12 +66,12 @@ function NavBar() {
                     <NavDropdown.Item href="#future_account_setttings">manage account</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="#action/3.4">Something else</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="https://playoverwatch.com/en-us/beta/#beta-opt-in-button" target="_blank">Overwatch Beta Signup</NavDropdown.Item>
                 </NavDropdown>
             )
         }
     }
-    
-
     
     if (user == null && last_part_url == "register"){
         if(last_part_url == "register") console.log("register");

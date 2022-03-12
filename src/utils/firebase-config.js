@@ -97,14 +97,15 @@ const deletefrommatch = async(user,team) => {
   //get next in line queue
   const qnil = query(collection(db,"queue"), orderBy("time", "asc"));
   const current_queue = await getDocs(qnil);
-  const replacement_user = current_queue.docs[0].data().name;
+  const replac_user = current_queue.docs[0].data().name;
   const current_match = current_match_doc.docs[0].data();
   console.log(current_match_doc.docs[0].id);
   const docref_change = doc(db,"current_match",current_match_doc.docs[0].id)
-
+  const replacement_user = {"name":replac_user,"anchored":false}
   if(team == "blue"){
     const usersteam = current_match_doc.docs[0].data().team_blue
-    const index = usersteam.indexOf(user);
+    const index = usersteam.findIndex(x => x.name ===user.name);
+    console.log(index);
     if (index > -1) {
       usersteam.splice(index, 1); 
     }
@@ -116,7 +117,7 @@ const deletefrommatch = async(user,team) => {
     updateDoc(docref_change,current_match);
   }else{
     const usersteam = current_match_doc.docs[0].data().team_red
-    const index = usersteam.indexOf(user);
+    const index = usersteam.findIndex(x => x.name ===user.name);
     if (index > -1) {
       usersteam.splice(index, 1);
     }
@@ -127,14 +128,81 @@ const deletefrommatch = async(user,team) => {
   }
   
   //lastly delete replacement user from queue
-  await deletefromqueue(replacement_user);
+  await deletefromqueue(replac_user);
 
+}
+
+const bottomqueuereplaceteam = async(team) => {
+  //get all the members from the team
+  const q = query(collection(db, "current_match"));
+  const current_match_doc = await getDocs(q);
+  const current_match = current_match_doc.docs[0].data();
+  const docref_change = doc(db,"current_match",current_match_doc.docs[0].id)
+  if(team == "blue"){
+    const usersteam = current_match_doc.docs[0].data().team_blue
+    for (let i = 0; i < usersteam.length; i++) {
+      console.log(usersteam[i].anchored);
+      if(usersteam[i].anchored == false){
+        await deletefrommatch(usersteam[i],team);
+        await addtoqueue(usersteam[i].name);
+      }
+    }
+  }else{
+    const usersteam = current_match_doc.docs[0].data().team_red
+    for (let i = 0; i < usersteam.length; i++) {
+      console.log(usersteam[i]);
+      console.log(team);
+      if(usersteam[i].anchored == false){
+        console.log(usersteam[i]);
+        await deletefrommatch(usersteam[i],team);
+        await addtoqueue(usersteam[i].name);
+      }
+    }
+  }
+}
+
+const changeanchoruser = async(user,team) => {
+  const q = query(collection(db, "current_match"));
+  const current_match_doc = await getDocs(q);
+  const current_match = current_match_doc.docs[0].data();
+  const docref_change = doc(db,"current_match",current_match_doc.docs[0].id)
+  if(team == "blue"){
+    const usersteam = current_match_doc.docs[0].data().team_blue
+    const index = usersteam.findIndex(x => x.name ===user.name);
+    console.log(usersteam[index].anchored);
+    if(usersteam[index].anchored === true){
+      usersteam[index].anchored = false
+    }else{
+      usersteam[index].anchored = true
+    }
+    current_match.team_blue = usersteam;
+    // update record of current_match
+    updateDoc(docref_change,current_match);
+  }else{
+    const usersteam = current_match_doc.docs[0].data().team_red
+    console.log(usersteam);
+    const index = usersteam.findIndex(x => x.name ===user.name);
+    console.log(usersteam[index].anchored);
+    if(usersteam[index].anchored === true){
+      usersteam[index].anchored = false
+    }else{
+      usersteam[index].anchored = true
+    }
+    current_match.team_red = usersteam;
+    // update record of current_match
+    updateDoc(docref_change,current_match);
+  }
 }
 
 const replacefrommatch = async(user,team) => {
   await deletefrommatch(user,team);
-  await addtoqueue(user);
-  await bumptofirst(user);
+  await addtoqueue(user.name);
+  await bumptofirst(user.name);
+}
+
+const bottomqueuereplacefrommatch = async(user,team) => {
+  await deletefrommatch(user,team);
+  await addtoqueue(user.name);
 }
 
 const modplayself = async(user) => {
@@ -313,5 +381,8 @@ export {
     bumptofirst,
     deletefrommatch,
     replacefrommatch,
-    modplayself
+    modplayself,
+    bottomqueuereplacefrommatch,
+    changeanchoruser,
+    bottomqueuereplaceteam
   };

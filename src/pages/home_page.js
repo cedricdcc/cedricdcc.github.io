@@ -7,6 +7,8 @@ import { auth, db, logout } from "../utils/firebase-config";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import {Button, OverlayTrigger, Popover} from 'react-bootstrap';
 import {SiRiotgames} from 'react-icons/si';
+import SocialBanner from "../components/socialbanner";
+import {BsArrowDownShort} from 'react-icons/bs';
 import '../css/home_page.css';
 
 function HomePage() {
@@ -51,10 +53,10 @@ function HomePage() {
                     <ReactTwitchEmbedVideo channel="impulsiveempathy" height="100%"/>
                 </div>
                 <div class="other-area">
+                        <SocialBanner/>
                         <img src={logo} className="App-logo" alt="logo" />
                         <p>Welcome back {name}</p>
-                        <p>
-                        Follow the link below and complete the valorant profile registration to participate in awesome events.</p>
+                        <p>Follow the link below and complete the valorant profile registration to participate in awesome events.</p>
                         <a href="/register_user">register valo id</a>
                 </div>
             </div>
@@ -67,11 +69,14 @@ function HomePage() {
                     <ReactTwitchEmbedVideo channel="impulsiveempathy" height="100%"/>
                 </div>
                 <div class="other-area">
-                        <img src={logo} className="App-logo" alt="logo" />
-                        <p>Welcome back {name}</p>
-                        <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
-                            <Button href="/queue" variant="danger"> <SiRiotgames size="10em"/> </Button>
-                        </OverlayTrigger>
+                    <SocialBanner/>
+                    <img src={logo} className="App-logo" alt="logo" />
+                    <p>Welcome back {name}</p>
+                    <p className="pulsetext"><b>Fist</b> to <b>queue</b></p>
+                    <BsArrowDownShort size="5em" className="pulsearrow"/>
+                    <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
+                        <Button href="/queue" variant="danger" className="queuebutton"><SiRiotgames size="10em"/></Button>
+                    </OverlayTrigger>
                 </div>
             </div>
         )

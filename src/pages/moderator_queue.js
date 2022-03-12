@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { useAuthState } from "react-firebase-hooks/auth";
 import {auth ,db, getValUserDocUid, getValUserInfo, updateValUserInfo, getValUserCredentials, bumptofirst, deletefromqueue,modplayself} from '../utils/firebase-config';
 import {getUserInfo} from "../utils/tracker-gg-valo-api";
-import ReactLoading from 'react-loading';
 import {collection, getDocs, onSnapshot, query, orderBy} from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
 import CurrentMatchMod from '../components/current_match_mod';
@@ -37,6 +36,14 @@ function ModQueuePage() {
             <Popover.Header as="h3">bump to first place</Popover.Header>
             <Popover.Body>
             Click this to bump player to the first place of the queue.
+            </Popover.Body>
+        </Popover>
+    );
+    const popovernextgroup = (
+        <Popover id="popover-delete">
+            <Popover.Header as="h3">Next group (not working)</Popover.Header>
+            <Popover.Body>
+                Click this to replace everybody from the current match with poeple in the queue. The people replaced will not auto go in the queue.
             </Popover.Body>
         </Popover>
     );
@@ -119,7 +126,9 @@ function ModQueuePage() {
             <hr/>
             <CurrentMatchMod/>
             <Button variant="primary" onClick={() => modplayself(user?.uid)}>play yourself</Button>
-            <Button variant="primary">next group</Button>
+            <OverlayTrigger trigger="hover" placement="right" overlay={popovernextgroup}>
+                <Button variant="primary" >next group</Button>
+            </OverlayTrigger>
             <hr />
             <div className="queuetable">
                 <Table striped bordered>

@@ -55,7 +55,7 @@ function UserPage() {
             <ReactLoading className="loadingbar" type='bars' color='grey' height={'20vw'} width={'20vw'} />
         </div>
         )
-        }else{
+    }else{
         return (
             <div>
                 <hr />

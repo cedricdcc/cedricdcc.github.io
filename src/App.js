@@ -12,6 +12,8 @@ import Footer from './components/footer';
 import ValAccountRegistration from './pages/register_valorant_account';
 import QueuePage from './pages/queue';
 import ModQueuePage from './pages/moderator_queue';
+import TourneyPage from './pages/tournament';
+import MakeTournamentPage from './pages/make_tournament';
 import './App.css';
 import { StepsProvider } from "react-step-builder";
 function App() {
@@ -31,6 +33,8 @@ function App() {
           <Route path='/tasks' element={<TaskPage/>} />
           <Route path='/queue' element={<QueuePage/>} />
           <Route path='/moderator_queue' element={<ModQueuePage/>} />
+          <Route path='/make_tournament' element={<MakeTournamentPage/>} />
+          <Route path='/tournament' element={<TourneyPage/>} />
           <Route path='*' element={<PageNFound/>} />
         </Routes>
       </StepsProvider>
