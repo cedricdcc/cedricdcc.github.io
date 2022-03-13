@@ -25,6 +25,22 @@ function CurrentMatch() {
         });
 
     }, []); 
+
+    function DisplayNameMatch(props) {
+        const user = props.user;
+        const rs = user.anchored
+        if(rs == false){
+            return (
+                <td>{user.name}</td>
+            )
+        }if(rs == true){
+            return (
+                <td><b>{user.name}</b></td>
+            )
+        }else{
+            return(<></>)
+        }
+    }
   
     return (
         //whatever you choose to render;
@@ -39,7 +55,7 @@ function CurrentMatch() {
                     <tbody>
                     {currentmatch.team_blue.map((user) => {
                         return  <tr>
-                                    <td>{user}</td>
+                                    <DisplayNameMatch user={user}/>
                                 </tr>
                         })}
                     </tbody>
@@ -55,7 +71,7 @@ function CurrentMatch() {
                     <tbody>
                     {currentmatch.team_red.map((user) => {
                         return  <tr>
-                                    <td>{user}</td>
+                                    <DisplayNameMatch user={user}/>
                                 </tr>
                         })}
                     </tbody>

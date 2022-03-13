@@ -115,23 +115,22 @@ function CurrentMatchMod() {
                     </thead>
                     <tbody>
                     {currentmatch.team_blue.map((user) => {
-                        return  <tr>
-                                    <td width="150px">
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={popoverdelete}>
-                                            <Button variant='danger' onClick={() => deletefrommatch(user,"blue")}><FaTrashAlt/></Button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={popoverreplace}>
-                                            <Button variant='info'   onClick={() => replacefrommatch(user,"blue")}><FaRecycle/></Button>
-                                        </OverlayTrigger>
-                                        <AnchorButton user={user} team="blue"/>
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={popoverreplacedown}>
-                                            <Button variant='warning'  onClick={() => bottomqueuereplacefrommatch(user,"blue")} ><BsBoxArrowDown/></Button>
-                                        </OverlayTrigger>
-                                        
-                                    </td>
-                                    <DisplayNameMatch user={user}/>
-                                </tr>
-                        })}
+                    return  <tr>
+                                <td width="150px">
+                                    <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={popoverdelete}>
+                                        <Button variant='danger' onClick={() => deletefrommatch(user,"blue")}><FaTrashAlt/></Button>
+                                    </OverlayTrigger>
+                                    <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={popoverreplace}>
+                                        <Button variant='info'   onClick={() => replacefrommatch(user,"blue")}><FaRecycle/></Button>
+                                    </OverlayTrigger>
+                                    <AnchorButton user={user} team="blue"/>
+                                    <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={popoverreplacedown}>
+                                        <Button variant='warning'  onClick={() => bottomqueuereplacefrommatch(user,"blue")} ><BsBoxArrowDown/></Button>
+                                    </OverlayTrigger>
+                                </td>
+                                <DisplayNameMatch user={user}/>
+                            </tr>
+                    })}
                     </tbody>
                 </Table>
             </div>

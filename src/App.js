@@ -14,6 +14,8 @@ import QueuePage from './pages/queue';
 import ModQueuePage from './pages/moderator_queue';
 import TourneyPage from './pages/tournament';
 import MakeTournamentPage from './pages/make_tournament';
+import MatchesPage from './pages/matches';
+import TeamsPage from './pages/teams';
 import './App.css';
 import { StepsProvider } from "react-step-builder";
 function App() {
@@ -32,6 +34,8 @@ function App() {
           <Route path='/dashboard' element={<Dashboard/>} />
           <Route path='/tasks' element={<TaskPage/>} />
           <Route path='/queue' element={<QueuePage/>} />
+          <Route path='/matches' element={<MatchesPage/>} />
+          <Route path='/teams' element={<TeamsPage/>} />
           <Route path='/moderator_queue' element={<ModQueuePage/>} />
           <Route path='/make_tournament' element={<MakeTournamentPage/>} />
           <Route path='/tournament' element={<TourneyPage/>} />

@@ -35,7 +35,11 @@ function NavBar() {
         const rs = props.usercred;
         if(rs == "moderator"){
             return (
-                <Nav.Link href="/moderator_queue">queue</Nav.Link>
+                <>
+                    <Nav.Link href="/moderator_queue">queue</Nav.Link>
+                    <Nav.Link href="/teams">teams</Nav.Link>
+                </>
+                
             )
         }if(rs == "error"){
             return (
@@ -43,7 +47,11 @@ function NavBar() {
             )
         }else{
             return (
-                <Nav.Link href="/queue">queue</Nav.Link>
+                <>
+                    <Nav.Link href="/queue">queue</Nav.Link>
+                    <Nav.Link href="/teams">teams</Nav.Link>
+                </>
+                
             )
         }
     }
